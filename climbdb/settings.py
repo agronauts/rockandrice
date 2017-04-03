@@ -15,6 +15,10 @@ SPIDER_MODULES = ['climbdb.spiders']
 NEWSPIDER_MODULE = 'climbdb.spiders'
 
 
+# Mongo DB config
+MONGO_URI = 'localhost'
+MONGO_DATABASE = 'blah'
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'climbdb (+http://www.yourdomain.com)'
 
@@ -61,9 +65,9 @@ NEWSPIDER_MODULE = 'climbdb.spiders'
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'climbdb.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'climbdb.pipelines.MongoPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
