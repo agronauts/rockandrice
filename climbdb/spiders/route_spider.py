@@ -10,14 +10,19 @@ class CragSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'http://climbnz.org.nz/nz/si/canterbury/banks-peninsula/the-monument',
-            'http://climbnz.org.nz/nz/si/westland/charleston/south-of-deep-creek/the-nursery',
+            'http://climbnz.org.nz/crags',
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-            yield {
+        for href in response.xpath('//div/ul/li/div/span/a/@href').extract():
+            print(href)
+            yield scrapy.Request(response.urljoin(href),
+                                 callback=self.parse_crag)
+
+    def parse_crag(self, response):
+        yield {
                 'name': response.xpath('//title/text()').re_first('.+\|')[:-2],
                 'description': '\n'.join(response.xpath("//div[contains(@class, 'description')]/p/text()").extract()),
             }
