@@ -8,6 +8,7 @@ import scrapy
 from scrapy.loader import ItemLoader
 
 from climbdb.items import CragItem
+from climbdb.loaders import CragLoader
 
 
 class CragSpider(scrapy.Spider):
@@ -26,7 +27,7 @@ class CragSpider(scrapy.Spider):
                                  callback=self.parse_crag)
 
     def parse_crag(self, response):
-        l = ItemLoader(item=CragItem(), response=response)
+        l = CragLoader(item=CragItem(), response=response)
         l.add_xpath('name', '//title/text()')
         l.add_xpath('description', "//div[contains(@class, 'description')]/p/text()")
         return l.load_item()
