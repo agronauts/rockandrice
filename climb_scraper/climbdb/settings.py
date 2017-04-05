@@ -8,6 +8,16 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+import os
+import sys
+
+# Django integration
+DJANGO_PROJECT_PATH = '/home/patrick/Python/climbdb/rocknrice' #TODO make less birttle
+DJANGO_SETTINGS_MODULE = 'rocknrice.settings'
+sys.path.append(DJANGO_PROJECT_PATH)
+os.environ['DJANGO_SETTINGS_MODULE'] = DJANGO_SETTINGS_MODULE
+import django
+django.setup()
 
 BOT_NAME = 'climbdb'
 
@@ -18,6 +28,7 @@ NEWSPIDER_MODULE = 'climbdb.spiders'
 # Mongo DB config
 MONGO_URI = 'localhost'
 MONGO_DATABASE = 'blah'
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'climbdb (+http://www.yourdomain.com)'
@@ -66,6 +77,7 @@ MONGO_DATABASE = 'blah'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+   'climbdb.pipelines.DjangoSavePipeline': 100,
    'climbdb.pipelines.MongoPipeline': 300,
 }
 

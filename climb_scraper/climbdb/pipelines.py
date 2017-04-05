@@ -8,6 +8,10 @@
 
 import pymongo
 
+
+from climbdb.spiders.crag_spider import CragSpiderDjango, CragSpider
+
+
 class MongoPipeline(object):
 
     collection_name = 'scrapy_crags'
@@ -31,5 +35,12 @@ class MongoPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db[self.collection_name].insert(dict(item))
+        if type(spider) == CragSpider:
+            self.db[self.collection_name].insert(dict(item))
+        return item
+
+class DjangoSavePipeline(object):
+    def process_item(self, item, spider):
+        if type(spider) == CragSpiderDjango:
+            item.save()
         return item
