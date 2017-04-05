@@ -1,10 +1,7 @@
 import scrapy
 
 
-# TODO Upgrade topython 3
 # TODO Learn virtual env
-# TODO Learn XPath
-# TODO Change this to crag spider?
 from scrapy.loader import ItemLoader
 
 from climbdb.items import CragItem
