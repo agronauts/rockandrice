@@ -95,3 +95,4 @@ ENV/
 .idea/
 *.sqlite3
 /rocknrice/app/static/build/
+/rocknrice/app/static/node_modules/

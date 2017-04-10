@@ -1,17 +1,73 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+let React = require('react');
+let ReactDOM = require('react-dom');
+let $ = require('jquery')
 
-var calculatePayment = function(principal, years, rate) {
-    var monthlyRate = rate / 100 / 12;
-    var monthlyPayment = principal * monthlyRate / (1 - (Math.pow(1/(1 + monthlyRate), years * 12)));
-    var balance = principal;
-    var amortization = [];
-    for (var y=0; y<years; y++) {
-        var interestY = 0;  //Interest payment for year y
-        var principalY = 0; //Principal payment for year y
-        for (var m=0; m<12; m++) {
-            var interestM = balance * monthlyRate;       //Interest payment for month m
-            var principalM = monthlyPayment - interestM; //Principal payment for month m
+let ClimbList = React.createClass({
+    render: function () {
+        let climbs = this.props.data.map(function (climb) {
+            return (
+                <tr>
+                    <td>{climb.name}</td>
+                    <td>{climb.description.substring(0,30)}</td>
+                </tr>
+            );
+        });
+        return (
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>{climbs}</tbody>
+            </table>
+        )
+    }
+});
+
+let ClimbSearch = React.createClass({
+    getInitialState: function () {
+       return {
+           crags: [
+               {name: 'blah', description: 'whew'}
+           ]
+       }
+    },
+    componentDidMount: function() {
+        $.ajax({
+            url: '../static/crags.json',
+            dataType: 'json',
+            success: function(data) {
+                this.setState({crags: data});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    },
+    render: function () {
+        return (
+            <div>
+                <p>Product Search</p>
+                {/*<p>{this.state.crags}</p>*/}
+                <ClimbList data={this.state.crags}/>
+            </div>
+        );
+    }
+});
+
+let calculatePayment = function(principal, years, rate) {
+    let monthlyRate = rate / 100 / 12;
+    let monthlyPayment = principal * monthlyRate / (1 - (Math.pow(1/(1 + monthlyRate), years * 12)));
+    let balance = principal;
+    let amortization = [];
+    for (let y=0; y<years; y++) {
+        let interestY = 0;  //Interest payment for year y
+        let principalY = 0; //Principal payment for year y
+        for (let m=0; m<12; m++) {
+            let interestM = balance * monthlyRate;       //Interest payment for month m
+            let principalM = monthlyPayment - interestM; //Principal payment for month m
             interestY = interestY + interestM;
             principalY = principalY + principalM;
             balance = balance - principalM;
@@ -21,7 +77,7 @@ var calculatePayment = function(principal, years, rate) {
     return {monthlyPayment: monthlyPayment, amortization:amortization};
 };
 
-var Header = React.createClass({
+let Header = React.createClass({
     render: function () {
         return (
             <header>
@@ -31,9 +87,9 @@ var Header = React.createClass({
     }
 });
 
-var AmortizationChart = React.createClass({
+let AmortizationChart = React.createClass({
     render: function () {
-        var items = this.props.data.map(function (year, index) {
+        let items = this.props.data.map(function (year, index) {
             return (
                 <tr key={index}>
                     <td>{index + 1}</td>
@@ -66,7 +122,7 @@ var AmortizationChart = React.createClass({
     }
 });
 
-var MortgageCalculator = React.createClass({
+let MortgageCalculator = React.createClass({
     getInitialState: function() {
         return {
             principal: this.props.principal,
@@ -84,9 +140,9 @@ var MortgageCalculator = React.createClass({
         this.setState({rate: event.target.value});
     },
     render: function () {
-        var payment = calculatePayment(this.state.principal, this.state.years, this.state.rate);
-        var monthlyPayment = payment.monthlyPayment;
-        var amortization = payment.amortization;
+        let payment = calculatePayment(this.state.principal, this.state.years, this.state.rate);
+        let monthlyPayment = payment.monthlyPayment;
+        let amortization = payment.amortization;
         return (
             <div className="content">
                 <div className="form">
@@ -110,11 +166,12 @@ var MortgageCalculator = React.createClass({
     }
 });
 
-var App = React.createClass({
+let App = React.createClass({
     render: function () {
         return (
             <div>
                 <Header title="React Mortgage Calculator"/>
+                <ClimbSearch/>
                 <MortgageCalculator principal="200000" years="30" rate="5"/>
             </div>
         );
