@@ -91,7 +91,7 @@ ENV/
 # Rope project settings
 .ropeproject
 
-*.json
 *.html
 .idea/
 *.sqlite3
+/rocknrice/app/static/build/
