@@ -1,9 +1,11 @@
 let React = require('react');
 let ReactDOM = require('react-dom');
 let $ = require('jquery');
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-let CragSearchForm = React.createClass({
-    nameChange: function(event) {
+//TODO Abstract crag/climb
+let SearchForm = React.createClass({
+    searchChange: function(event) {
         this.props.onSearchRequest(event.target.value);
     },
     render: function () {
@@ -12,7 +14,7 @@ let CragSearchForm = React.createClass({
                 <div className="form">
                     <div>
                         <label>Name:</label>
-                        <input type="text" onChange={this.nameChange}/>
+                        <input type="text" onChange={this.searchChange}/>
                     </div>
                 </div>
             </div>
@@ -74,21 +76,39 @@ let ClimbSearch = React.createClass({
         return (
             <div>
                 <p>Product Search</p>
-                <CragSearchForm onSearchRequest={this.filterCrags}/>
+                <SearchForm onSearchRequest={this.filterCrags}/>
                 <ClimbList data={this.state.cur_crags}/>
             </div>
         );
     }
 });
 
+
 let App = React.createClass({
+    handleSelect: function(index, last) {
+        console.log('Selected tab: ' + index + ', Last tab: ' + last);
+    },
+
     render: function () {
         return (
-            <div>
-                <ClimbSearch/>
-            </div>
-        );
-    }
+            <Tabs onSelect={this.handleSelect} selectedIndex={2}>
+                <TabList>
+                  <Tab>Foo</Tab>
+                  <Tab>Bar</Tab>
+                  <Tab>Baz</Tab>
+                </TabList>
+                <TabPanel>
+                  <h2><ClimbSearch/></h2>
+                </TabPanel>
+                <TabPanel>
+                  <h2>Hello from Bar</h2>
+                </TabPanel>
+                <TabPanel>
+                  <h2>Hello from Baz</h2>
+                </TabPanel>
+            </Tabs>
+    );
+  }
 });
 
 ReactDOM.render(<App/>,  document.getElementById("app"));
