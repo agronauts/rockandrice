@@ -9,6 +9,9 @@ import scrapy
 from scrapy_djangoitem import DjangoItem
 from app.models import Crags
 
+class ClimbItem(scrapy.Item):
+    name = scrapy.Field()
+    description = scrapy.Field()
 
 class CragItem(scrapy.Item):
     name = scrapy.Field()

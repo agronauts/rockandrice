@@ -4,11 +4,33 @@ import scrapy
 # TODO Learn virtual env
 from scrapy.loader import ItemLoader
 
-from climbdb.items import CragItem
-from climbdb.loaders import CragLoader
+from climbdb.items import CragItem, ClimbItem
+from climbdb.loaders import CragLoader, ClimbLoader
 
 from climbdb.items import CragDjango
 
+
+class ClimbSpider(scrapy.Spider):
+    name = "climbs"
+
+    def start_requests(self):
+        urls = [
+            'http://climbnz.org.nz/nz/si/canterbury/port-hills/ampitheatre-wall/close-to-the-edge',
+        ]
+        for url in urls:
+            yield scrapy.Request(url=url, callback=self.parse)
+
+    def parse(self, response):
+        # for href in response.xpath('//div/ul/li/div/span/a/@href').extract():
+        #     yield scrapy.Request(response.urljoin(href),
+        #                          callback=self.parse_crag)
+        return self.parse_climb(response)
+
+    def parse_climb(self, response):
+        l = ClimbLoader(item=ClimbItem(), response=response)
+        l.add_xpath('name', '//h1/text()')
+        # l.add_xpath('description', "//div[contains(@class, 'description')]/p/text()")
+        return l.load_item()
 
 class CragSpider(scrapy.Spider):
     name = "crags"
