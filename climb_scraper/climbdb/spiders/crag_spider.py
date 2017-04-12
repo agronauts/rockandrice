@@ -29,7 +29,7 @@ class ClimbSpider(scrapy.Spider):
     def parse_climb(self, response):
         l = ClimbLoader(item=ClimbItem(), response=response)
         l.add_xpath('name', '//h1/text()')
-        # l.add_xpath('description', "//div[contains(@class, 'description')]/p/text()")
+        l.add_xpath('description', '//div/p/text()')
         return l.load_item()
 
 class CragSpider(scrapy.Spider):
