@@ -15,16 +15,15 @@ class ClimbSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'http://climbnz.org.nz/nz/si/canterbury/port-hills/ampitheatre-wall/close-to-the-edge',
+            'http://climbnz.org.nz/nz/si/canterbury/port-hills/ampitheatre-wall/',
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        # for href in response.xpath('//div/ul/li/div/span/a/@href').extract():
-        #     yield scrapy.Request(response.urljoin(href),
-        #                          callback=self.parse_crag)
-        return self.parse_climb(response)
+        for href in response.xpath('//tr/td/div/a/@href').extract():
+            yield scrapy.Request(response.urljoin(href),
+                                 callback=self.parse_climb)
 
     def parse_climb(self, response):
         l = ClimbLoader(item=ClimbItem(), response=response)
